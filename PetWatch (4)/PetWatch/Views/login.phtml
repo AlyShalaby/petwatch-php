@@ -1,0 +1,48 @@
+<?php require('Views/template/header.phtml') ?>
+<link rel="stylesheet" href="css/login.css">
+
+<!-- this main login div uses flex for left and right sides -->
+<div class="main-login">
+    <div class="left-side">
+        <img src="Images/login_image.jpg" alt="Pet">
+    </div>
+
+    <div class="right-part">
+        <h1 class="title">Login</h1>
+
+        <!-- this shows success message if succesful -->
+        <?php if (!empty($view->message)): ?>
+            <div class="success-message">
+                <?php echo htmlspecialchars($view->message); ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- this shows error message if failed -->
+        <?php if (!empty($view->error)): ?>
+            <div class="error-message">
+                <?php echo htmlspecialchars($view->error); ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="post" action="login.php">
+            <div class="input-part">
+                <label>Username</label>
+                <!-- this keeps the username if login fails so user doesn't have to type it again -->
+                <input type="text" name="username" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>" required>
+            </div>
+
+            <div class="input-part">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <button type="submit" name="loginbutton" class="login-button">LOGIN</button>
+        </form>
+
+        <div class="browse-link">
+            <a href="browse.php">Browse Pets Without Login →</a>
+        </div>
+    </div>
+</div>
+
+<?php require('Views/template/footer.phtml') ?>

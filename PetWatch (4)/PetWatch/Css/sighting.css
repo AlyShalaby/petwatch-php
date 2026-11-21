@@ -1,0 +1,167 @@
+/* Report sighting page css */
+
+.main {
+    background: linear-gradient(135deg, #1e1e2e 0%, #2c2c3e 50%, #3a3a4f 100%);
+    min-height: calc(100vh - 50px);
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box1 {
+    background: #3a3a4f;
+    padding: 40px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.box1 h2 {
+    color: white;
+    font-family: 'Impact', Arial, sans-serif;
+    margin-bottom: 30px;
+}
+
+.pet-info {
+    background: #2c2c3e;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.pet-info h3 {
+    color: white;
+    margin-bottom: 15px;
+}
+
+.pet-info p {
+    color: #bbb;
+    margin-bottom: 5px;
+}
+
+.item1 {
+    margin-bottom: 20px;
+}
+
+.item1 label {
+    display: block;
+    color: #bbb;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.item1 input,
+.item1 textarea {
+    width: 100%;
+    padding: 12px;
+    background: #2c2c3e;
+    border: 1px solid #4a4a5f;
+    border-radius: 5px;
+    color: white;
+}
+
+.item1 textarea {
+    resize: vertical;
+}
+
+.row1 {
+    display: flex;
+    gap: 15px;
+}
+
+.item1 small {
+    color: #888;
+    font-size: 12px;
+}
+
+.buttons1 {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.button-submit {
+    padding: 12px 30px;
+    background: #ff8c42;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'Impact', Arial, sans-serif;
+}
+
+.button-submit:hover {
+    background: #ff6b1a;
+}
+
+.button-back {
+    padding: 12px 30px;
+    background: #5a5a7a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.button-back:hover {
+    background: #4a4a6a;
+}
+
+.success-message {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background: #2d4a2f;
+    color: #8fd993;
+}
+
+.error-message {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background: #4a2d2d;
+    color: #f98a8a;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .main {
+        padding: 20px;
+    }
+
+    .box1 {
+        padding: 25px;
+    }
+
+    .row1 {
+        flex-direction: column;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .main {
+        padding: 15px;
+    }
+
+    .box1 {
+        padding: 20px;
+    }
+
+    .box1 h2 {
+        font-size: 24px;
+    }
+
+    .buttons1 {
+        flex-direction: column;
+    }
+
+    .button-submit,
+    .button-back {
+        width: 100%;
+        text-align: center;
+    }
+}

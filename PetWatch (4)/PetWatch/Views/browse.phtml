@@ -1,0 +1,163 @@
+<?php require('Views/template/header.phtml') ?>
+<link rel="stylesheet" href="css/browse.css">
+
+<!-- main uses flex column for 2 sections -->
+<div class="main">
+    <h2>Browse Pets</h2>
+
+    <!-- live search box  results appear as you type -->
+    <div class="live-search-box">
+        <h3>Live Search</h3>
+        <div class="live-search-inputs">
+            <input type="text" id="live-name"    placeholder="Name...">
+            <input type="text" id="live-species" placeholder="Species...">
+            <select id="live-status">
+                <option value="">All statuses</option>
+                <option value="lost">Lost</option>
+                <option value="found">Found</option>
+            </select>
+        </div>
+        <!-- results appear here without the page reloading  -->
+        <div id="live-results" style="display:none;"></div>
+    </div>
+
+    <!-- top section uses flex -->
+    <div class="top-section">
+        <div class="search-form">
+            <h3>Search</h3>
+            <!-- this is the form for searching -->
+            <form method="get" action="browse.php">
+                <div class="form-row">
+                    <label>Name</label>
+                    <!-- this keeps the search value so form remembers what user searched -->
+                    <input type="text" name="name" value="<?php if (isset($view->search_params['name'])) echo htmlspecialchars($view->search_params['name']); ?>">
+                </div>
+                <div class="form-row">
+                    <label>Species</label>
+                    <input type="text" name="species" value="<?php if (isset($view->search_params['species'])) echo htmlspecialchars($view->search_params['species']); ?>">
+                </div>
+                <div class="form-row">
+                    <label>Breed</label>
+                    <input type="text" name="breed" value="<?php if (isset($view->search_params['breed'])) echo htmlspecialchars($view->search_params['breed']); ?>">
+                </div>
+                <div class="form-row">
+                    <label>Color</label>
+                    <input type="text" name="color" value="<?php if (isset($view->search_params['color'])) echo htmlspecialchars($view->search_params['color']); ?>">
+                </div>
+                <div class="form-row">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="">All</option>
+                        <!-- this keeps the status that somone picked like found or lost -->
+                        <option value="lost" <?php if (isset($view->search_params['status']) && $view->search_params['status'] == 'lost') echo 'selected'; ?>>Lost</option>
+                        <option value="found" <?php if (isset($view->search_params['status']) && $view->search_params['status'] == 'found') echo 'selected'; ?>>Found</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>Description</label>
+                    <input type="text" name="description" value="<?php if (isset($view->search_params['description'])) echo htmlspecialchars($view->search_params['description']); ?>">
+                </div>
+                <!-- buttons use flex -->
+                <div class="form-buttons">
+                    <button type="submit" name="search">Search</button>
+                    <a href="browse.php">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- bottom section uses flex -->
+    <div class="bottom-section">
+        <div class="results-info">
+            <strong><?php echo isset($view->total_pets) ? $view->total_pets : '0'; ?> pets found</strong>
+            <?php if (isset($view->total_pages) && $view->total_pages > 1): ?>
+                (Page <?php echo $view->current_page; ?> of <?php echo $view->total_pages; ?>)
+            <?php endif; ?>
+        </div>
+
+        <?php if (isset($view->pets) && count($view->pets) > 0): ?>
+            <!-- pets grid uses grid -->
+            <div class="pets-grid">
+                <?php foreach ($view->pets as $pet): ?>
+                    <!-- pet card uses flex column -->
+                    <div class="pet-card">
+                        <?php
+                        $photoUrl = $pet->getPhotoUrl();
+                        if ($photoUrl) {
+                            echo '<img src="Images/' . htmlspecialchars($photoUrl) . '" alt="' . htmlspecialchars($pet->getName()) . '">';
+                        } else {
+                            // this no photo div uses flex to center the text
+                            echo '<div style="width: 100%; height: 180px; background: #2c2c3e; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; margin-bottom: 10px;">No Photo</div>';
+                        }
+                        ?>
+                        <!-- this get the pets info -->
+                        <div class="pet-name"><?php echo htmlspecialchars($pet->getName()); ?></div>
+                        <div class="pet-info">Species: <?php echo htmlspecialchars($pet->getSpecies()); ?></div>
+                        <div class="pet-info">Breed: <?php echo htmlspecialchars($pet->getBreed()); ?></div>
+                        <div class="pet-info">Color: <?php echo htmlspecialchars($pet->getColor()); ?></div>
+                        <div class="pet-info">Description: <?php echo htmlspecialchars($pet->getDescription()); ?></div>
+
+                        <?php if ($pet->getStatus() == 'lost'): ?>
+                            <span class="status-lost">Lost</span>
+                        <?php else: ?>
+                            <span class="status-found">Found</span>
+                        <?php endif; ?>
+
+                        <!-- buttons use flex -->
+                        <div class="buttons2">
+                            <!-- this checks if user is logged in to show report or login button -->
+                            <?php if (isset($_SESSION['user_id'])): ?>
+                                <a href="map.php?pet_id=<?php echo $pet->getId(); ?>">Report</a>
+                            <?php else: ?>
+                                <a href="login.php">Login</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <?php if (isset($view->total_pages) && $view->total_pages > 1): ?>
+                <!-- pagination buttons use flex -->
+                <div class="pagination-buttons">
+                    <?php
+                    // this builds the query string to keep search params when changing pages this is very imprtant as well
+                    $queryParams = array();
+                    foreach (array('name', 'species', 'breed', 'color', 'status', 'description') as $key) {
+                        if (isset($view->search_params[$key]) && !empty($view->search_params[$key])) {
+                            $queryParams[$key] = $view->search_params[$key];
+                        }
+                    }
+                    if (!empty($queryParams)) {
+                        $queryParams['search'] = '1';
+                    }
+                    $baseQuery = http_build_query($queryParams);
+                    ?>
+
+                    <!-- this shows previous button if  person is not on first page -->
+                    <?php if ($view->current_page > 1): ?>
+                        <a href="browse.php?<?php echo $baseQuery; ?>&page=<?php echo $view->current_page - 1; ?>">Previous</a>
+                    <?php endif; ?>
+
+                    <!-- this shows next button if person is not on last page -->
+                    <?php if ($view->current_page < $view->total_pages): ?>
+                        <a href="browse.php?<?php echo $baseQuery; ?>&page=<?php echo $view->current_page + 1; ?>">Next</a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <!-- this shows message when no pets found -->
+            <div class="no-results">No pets found.</div>
+        <?php endif; ?>
+
+        <div class="back-button">
+            <a href="index.php">← Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // this passes token to search.js
+    var AJAX_TOKEN = '<?php echo htmlspecialchars($view->ajaxToken); ?>';
+</script>
+<script src="Js/search.js"></script>
+<?php require('Views/template/footer.phtml') ?>

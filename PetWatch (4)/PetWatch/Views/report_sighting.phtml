@@ -1,0 +1,64 @@
+<?php require('Views/template/header.phtml') ?>
+<link rel="stylesheet" href="css/sighting.css">
+
+<div class="main">
+    <div class="box1">
+        <h2>Report Sighting</h2>
+
+        <!-- this shows success message after user submits the sighting form -->
+        <?php if (isset($view->success)): ?>
+            <div class="success-message">
+                <?php echo htmlspecialchars($view->success); ?>
+            </div>
+            <p><a href="browse.php" class="button-back">← Back to Browse</a></p>
+        <?php else: ?>
+            <!-- this shows error message if something went wrong -->
+            <?php if (isset($view->error)): ?>
+                <div class="error-message">
+                    <?php echo htmlspecialchars($view->error); ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- this shows the pet info being reported -->
+            <?php if ($view->currentPet): ?>
+                <div class="pet-info">
+                    <h3>Reporting Sighting For:</h3>
+                    <p><strong>Pet:</strong> <?php echo htmlspecialchars($view->currentPet->getName()); ?></p>
+                    <p><strong>Species:</strong> <?php echo htmlspecialchars($view->currentPet->getSpecies()); ?></p>
+                    <p><strong>Breed:</strong> <?php echo htmlspecialchars($view->currentPet->getBreed()); ?></p>
+                </div>
+            <?php endif; ?>
+
+            <form method="post" action="">
+                <div class="item1">
+                    <label>Comment</label>
+                    <textarea name="comment" rows="4" required placeholder="Describe the sighting..."></textarea>
+                </div>
+
+                <!-- this row1 uses flex to put latitude and longitude next ot each other -->
+                <div class="row1">
+                    <div class="item1">
+                        <label>Latitude</label>
+                        <!-- this keeps what user typed if form has error so info is not lost  -->
+                        <input type="text" name="latitude" value="<?php echo htmlspecialchars($_POST['latitude'] ?? ''); ?>" placeholder="e.g., 53.4809">
+                        <small>Optional - for mapping</small>
+                    </div>
+                    <div class="item1">
+                        <label>Longitude</label>
+                        <!-- this keeps what user typed if form has error so the info is not lost -->
+                        <input type="text" name="longitude" value="<?php echo htmlspecialchars($_POST['longitude'] ?? ''); ?>" placeholder="e.g., -2.2426">
+                        <small>Optional - for mapping</small>
+                    </div>
+                </div>
+
+                <!-- this buttons div uses flex -->
+                <div class="buttons1">
+                    <button type="submit" name="submit_sighting" class="button-submit">Submit Sighting</button>
+                    <a href="browse.php" class="button-back">← Back to Browse</a>
+                </div>
+            </form>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php require('Views/template/footer.phtml') ?>

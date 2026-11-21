@@ -1,0 +1,51 @@
+/* Common styles for header and footer */
+
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Header */
+header {
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+header a:hover {
+    color: #ff8c42;
+}
+
+.user-info {
+    color: white;
+    margin-right: 15px;
+    font-size: 14px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Footer */
+footer {
+    background-color: #2c2c3e;
+    color: #bbb;
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #3a3a4f;
+}

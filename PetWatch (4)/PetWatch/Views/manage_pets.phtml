@@ -1,0 +1,214 @@
+<?php require('Views/template/header.phtml') ?>
+<link rel="stylesheet" href="css/manage.css">
+
+<div class="main">
+    <h2 class="title">Manage Pets</h2>
+    <p class="welcome">Welcome, <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>!</p>
+
+    <!-- this shows success message when pet is added or updated -->
+    <?php if (isset($view->message)): ?>
+        <div class="success-message"><?php echo htmlspecialchars($view->message); ?></div>
+    <?php endif; ?>
+
+    <!-- this shows error message if something went wrong -->
+    <?php if (isset($view->error)): ?>
+        <div class="error-message"><strong>Error:</strong> <?php echo htmlspecialchars($view->error); ?></div>
+    <?php endif; ?>
+
+    <!-- main container uses flex column for 3 sections -->
+    <div class="main-container">
+        <!-- first flex section for add form -->
+        <div class="add-form-section">
+            <div class="form1">
+                <h3>Add New Pet</h3>
+                <form method="post" action="" enctype="multipart/form-data">
+                    <!-- row1 uses flex -->
+                    <div class="row1">
+                        <div class="item1">
+                            <label>Pet Name</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="item1">
+                            <label>Species</label>
+                            <input type="text" name="species" required>
+                        </div>
+                    </div>
+                    <!-- this row1 uses flex to put breed and color next to each other -->
+                    <div class="row1">
+                        <div class="item1">
+                            <label>Breed</label>
+                            <input type="text" name="breed">
+                        </div>
+                        <div class="item1">
+                            <label>Color</label>
+                            <input type="text" name="color">
+                        </div>
+                    </div>
+                    <div class="item1">
+                        <label>Description</label>
+                        <textarea name="description" rows="3"></textarea>
+                    </div>
+                    <!-- this row1 uses flex to put picture and status next to each other -->
+                    <div class="row1">
+                        <div class="item1">
+                            <label>Picture</label>
+                            <input type="file" name="picture" accept="image/*">
+                        </div>
+                        <div class="item1">
+                            <label>Status</label>
+                            <select name="status">
+                                <option value="lost">Lost</option>
+                                <option value="found">Found</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- buttons use flex -->
+                    <div class="buttons1">
+                        <button type="submit" name="add_pet">Add Pet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- second flex section for edit. this is part 2 of the 3 flex sections. hidden until edit button pressed -->
+        <?php if (isset($view->editing_pet) && $view->editing_pet): ?>
+            <div class="edit-form-section">
+                <div class="form1">
+                    <h3>Edit Pet</h3>
+                    <form method="post" action="" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="<?php echo $view->editing_pet->getId(); ?>">
+                        <!-- this row1 uses flex -->
+                        <div class="row1">
+                            <div class="item1">
+                                <label>Pet Name</label>
+                                <!-- this pre-fills the form with pet data that is alreaday there-->
+                                <input type="text" name="name" required value="<?php echo htmlspecialchars($view->editing_pet->getName()); ?>">
+                            </div>
+                            <div class="item1">
+                                <label>Species</label>
+                                <input type="text" name="species" required value="<?php echo htmlspecialchars($view->editing_pet->getSpecies()); ?>">
+                            </div>
+                        </div>
+                        <!-- this row1 uses flex to put breed and color next to each other -->
+                        <div class="row1">
+                            <div class="item1">
+                                <label>Breed</label>
+                                <input type="text" name="breed" value="<?php echo htmlspecialchars($view->editing_pet->getBreed() ?? ''); ?>">
+                            </div>
+                            <div class="item1">
+                                <label>Color</label>
+                                <input type="text" name="color" value="<?php echo htmlspecialchars($view->editing_pet->getColor() ?? ''); ?>">
+                            </div>
+                        </div>
+                        <div class="item1">
+                            <label>Description</label>
+                            <textarea name="description" rows="3"><?php echo htmlspecialchars($view->editing_pet->getDescription() ?? ''); ?></textarea>
+                        </div>
+                        <!-- this row1 uses flex to put picture and status next to each other -->
+                        <div class="row1">
+                            <div class="item1">
+                                <label>Picture</label>
+                                <input type="file" name="picture" accept="image/*">
+                            </div>
+                            <div class="item1">
+                                <label>Status</label>
+                                <select name="status">
+                                    <!-- this keeps the current status selected  either found or lost-->
+                                    <option value="lost" <?php echo $view->editing_pet->getStatus() == 'lost' ? 'selected' : ''; ?>>Lost</option>
+                                    <option value="found" <?php echo $view->editing_pet->getStatus() == 'found' ? 'selected' : ''; ?>>Found</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="buttons1">
+                            <button type="submit" name="update_pet">Save</button>
+                            <a href="manage_pets.php">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <?php else: ?>
+            <!-- this keeps the section in the layout even when hidden -->
+            <div class="edit-form-section" style="display: none;"></div>
+        <?php endif; ?>
+
+        <!-- third flex section for pets grid -->
+        <div class="pets-section">
+            <h3 class="pets-title">All Pets (Page <?php echo $view->current_page; ?> of <?php echo $view->total_pages; ?>)</h3>
+
+            <?php if (count($view->pets) > 0): ?>
+                <!-- pets grid uses grid -->
+                <div class="pets-grid">
+                    <?php foreach ($view->pets as $pet): ?>
+                        <!-- pet card uses flex column -->
+                        <div class="pet-card">
+                            <?php
+                            $photoUrl = $pet->getPhotoUrl();
+                            if ($photoUrl) {
+                                echo '<img src="Images/' . htmlspecialchars($photoUrl) . '" alt="' . htmlspecialchars($pet->getName()) . '">';
+                            } else {
+                                // this no photo div uses flex to center the text
+                                echo '<div style="width: 100%; height: 180px; background: #2c2c3e; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; margin-bottom: 15px;">No Photo</div>';
+                            }
+                            ?>
+
+                            <!-- this shows pet name species breed and color -->
+                            <div class="pet-name"><?php echo htmlspecialchars($pet->getName()); ?></div>
+                            <div class="pet-info">Species: <?php echo htmlspecialchars($pet->getSpecies()); ?></div>
+                            <div class="pet-info">Breed: <?php echo htmlspecialchars($pet->getBreed()); ?></div>
+                            <div class="pet-info">Color: <?php echo htmlspecialchars($pet->getColor()); ?></div>
+
+                            <!-- this shows lost or found like th estatus basicallz -->
+                            <?php if ($pet->getStatus() == 'lost'): ?>
+                                <span class="status-lost">Lost</span>
+                            <?php else: ?>
+                                <span class="status-found">Found</span>
+                            <?php endif; ?>
+
+                            <!-- this buttons div uses flex -->
+                            <div class="buttons2">
+                                <a href="manage_pets.php?edit=<?php echo $pet->getId(); ?>">Edit</a>
+                                <!-- this form is inline so buttons stay together -->
+                                <form method="post" style="display: inline;">
+                                    <input type="hidden" name="id" value="<?php echo $pet->getId(); ?>">
+                                    <!-- this makes status lost becomes found, found becomes lost -->
+                                    <input type="hidden" name="new_status" value="<?php echo $pet->getStatus() == 'lost' ? 'found' : 'lost'; ?>">
+                                    <button type="submit" name="update_status"><?php echo $pet->getStatus() == 'lost' ? 'Found' : 'Lost'; ?></button>
+                                </form>
+                                <a href="manage_pets.php?delete=<?php echo $pet->getId(); ?>" onclick="return confirm('Delete <?php echo htmlspecialchars($pet->getName()); ?>?')">Delete</a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="no-pets">No pets yet. Add one using the form above!</div>
+            <?php endif; ?>
+
+            <!-- this shows the pagination links -->
+            <?php if ($view->total_pages > 1): ?>
+                <div class="pagination">
+                    <?php if ($view->current_page > 1): ?>
+                        <a href="manage_pets.php?page=<?php echo $view->current_page - 1; ?>">Previous</a>
+                    <?php endif; ?>
+
+                    <?php for ($i = 1; $i <= $view->total_pages; $i++): ?>
+                        <a href="manage_pets.php?page=<?php echo $i; ?>" <?php echo $i == $view->current_page ? 'class="active-page"' : ''; ?>>
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
+
+                    <?php if ($view->current_page < $view->total_pages): ?>
+                        <a href="manage_pets.php?page=<?php echo $view->current_page + 1; ?>">Next</a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- this buttons div uses flex -->
+            <div class="buttons-bottom">
+                <a href="browse.php">Browse Pets</a>
+                <a href="index.php">Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php require('Views/template/footer.phtml') ?>

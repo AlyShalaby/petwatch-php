@@ -1,0 +1,135 @@
+/* Css for Index Page*/
+
+.hero-part {
+    background-image: url('../Images/home_page_image.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: calc(100vh - 50px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.hero-part::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.text-part {
+    position: relative;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 40px;
+}
+
+h1 {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: 72px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7);
+}
+
+.text-part > p {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 22px;
+    margin-bottom: 40px;
+    font-weight: 300;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.btn {
+    padding: 15px 35px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-family: 'Impact', Arial, sans-serif;
+    font-weight: 500;
+    transition: all 0.4s;
+    letter-spacing: 1px;
+}
+
+.btn-primary {
+    background-color: #ff8c42;
+    color: white;
+    border: 3px solid #ff8c42;
+}
+
+.btn-primary:hover {
+    background-color: white;
+    color: black;
+    border: 3px solid white;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: white;
+    border: 3px solid white;
+}
+
+.btn-secondary:hover {
+    background-color: white;
+    color: black;
+}
+
+.text-part {
+    margin-top: 40px;
+}
+
+.text_part h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: white;
+    letter-spacing: 3px;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 42px;
+    }
+
+    .hero-content > p {
+        font-size: 18px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 80%;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .text-part h2 {
+        font-size: 22px;
+    }
+}
+
+
+

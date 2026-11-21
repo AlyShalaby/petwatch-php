@@ -1,0 +1,32 @@
+<?php require('Views/template/header.phtml') ?>
+<link rel="stylesheet" href="css/index.css">
+
+<!-- this main section uses flex -->
+<main class="hero-part">
+    <div class="text-part">
+        <h1>Lost Your Pet?</h1>
+        <p>We help you find them</p>
+
+        <!-- this buttons div uses flex -->
+        <div class="buttons">
+            <!-- this checks if user is logged in and what type they are -->
+            <?php if (isset($_SESSION['username'])): ?>
+                <!-- admin users see manage pets button -->
+                <?php if ($_SESSION['user_type'] == 'admin'): ?>
+                    <a href="manage_pets.php" class="btn btn-primary">Manage Pets</a>
+                <?php endif; ?>
+                <a href="browse.php" class="btn btn-secondary">Browse Pets</a>
+            <?php else: ?>
+                <!-- not logged in users see login and browse buttons -->
+                <a href="login.php" class="btn btn-secondary">Login</a>
+                <a href="browse.php" class="btn btn-primary">Browse Pets</a>
+            <?php endif; ?>
+        </div>
+
+        <div class="text_part">
+            <h2>Search • Report • Reunite</h2>
+        </div>
+    </div>
+</main>
+<!-- also the browser users after they login if they go back ot he homepage they will se only browse and the admisn will see both browse and manage pets -->
+<?php require('Views/template/footer.phtml') ?>

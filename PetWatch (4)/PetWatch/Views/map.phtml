@@ -1,0 +1,69 @@
+<?php require_once('Views/template/header.phtml'); ?>
+
+<!-- this is leaflet css for the map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="Css/map.css" />
+
+<div class="map-page">
+
+    <h1>Map</h1>
+    <div class="map-layout">
+        <div class="map-column">
+            <!-- this is the map box -->
+            <div id="map"></div>
+        </div>
+
+        <div class="side-column">
+            <!-- this is the pets list section -->
+            <div class="pet-list" id="pet-list">
+                <h2>Pets</h2>
+                <p id="loading-msg">Loading pets...</p>
+            </div>
+
+            <div class="sighting-panel" id="sighting-panel">
+                <h2>Report a Sighting</h2>
+                <p id="sighting-intro">Please pick a pet to sight.</p>
+
+                <?php if ($view->isLoggedIn): ?>
+                <!-- this is the sighting form and only logged in users see it -->
+                <form id="sighting-form" style="display:none;">
+                    <input type="hidden" id="sighting-pet-id" name="pet_id" value="">
+                    <p id="sighting-pet-name"></p>
+
+                    <label for="sighting-comment">What did you see?</label>
+                    <textarea id="sighting-comment" name="comment" rows="3" maxlength="500"></textarea>
+
+                    <label for="sighting-lat">Latitude (optional)</label>
+                    <input type="text" id="sighting-lat" name="latitude" placeholder="26.2231">
+
+                    <label for="sighting-lng">Longitude (optional)</label>
+                    <input type="text" id="sighting-lng" name="longitude" placeholder="50.6119">
+
+                    <button type="button" id="use-my-location">Use My Location</button>
+                    <button type="submit" id="submit-sighting">Submit Sighting</button>
+
+                    <p id="sighting-message"></p>
+                </form>
+                <?php else: ?>
+                <div class="map-login-note">
+                    <p>If you spot a missing pet, log in first to report a sighting.</p>
+                    <a href="login.php">Log In to Report</a>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- this is leaflet js -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- this is our map js file -->
+<script>
+    // this passes token to map.js
+    var AJAX_TOKEN = '<?php echo htmlspecialchars($view->ajaxToken); ?>';
+    var SELECTED_PET_ID = <?php echo (int)$view->selectedPetId; ?>;
+</script>
+<script src="Js/map.js"></script>
+
+<?php require_once('Views/template/footer.phtml'); ?>

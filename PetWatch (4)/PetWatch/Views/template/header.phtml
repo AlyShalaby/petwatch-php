@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php if(isset($view->pageTitle)) { echo $view->pageTitle; } else { echo 'PetWatch'; } ?></title>
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+
+<!-- this header uses flex for navigation -->
+<header>
+    <div>
+        <a href="index.php">Home</a>
+        <a href="browse.php">Browse</a>
+        <a href="map.php">Map</a>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="manage_pets.php">Manage Pets</a>
+        <?php endif; ?>
+    </div>
+    <div>
+        <!-- this checks if user is logged in and shows different links -->
+        <?php if (isset($_SESSION['username'])): ?>
+            <span class="user-info">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            <a href="logout.php">Logout</a>
+        <?php else: ?>
+            <a href="login.php">Login</a>
+        <?php endif; ?>
+    </div>
+</header>
