@@ -9,3 +9,5 @@ Bahrain. AI was used to help develop it.
 
 To run it, put the folder in XAMPP's htdocs, create a database called
 petwatch, and open index.php.
+
+broooooo.
